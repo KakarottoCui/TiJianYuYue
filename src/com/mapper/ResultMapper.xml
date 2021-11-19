@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ResultMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Result">
+    <id column="OID" jdbcType="VARCHAR" property="oid" />
+    <result column="UNAME" jdbcType="VARCHAR" property="uname" />
+    <result column="USEX" jdbcType="VARCHAR" property="usex" />
+    <result column="PROJECTRESULT" jdbcType="VARCHAR" property="projectresult" />
+    <result column="FINALRESULT" jdbcType="VARCHAR" property="finalresult" />
+    <result column="DOCTOR" jdbcType="VARCHAR" property="doctor" />
+    <result column="FILEID" jdbcType="VARCHAR" property="fileId" />
+    <result column="FILENAME" jdbcType="VARCHAR" property="fileName" />
+    <result column="FILEPATH" jdbcType="VARCHAR" property="filePath" />
+    <result column="UPDATETIME" jdbcType="VARCHAR" property="updatetime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    oid, uname, usex, projectresult, finalresult, doctor, fileid, filename, filepath, updatetime
+  </sql>
+  
+  <update id="updateProjectResult" parameterType="com.entity.Result">
+    update result set projectresult= #{projectresult,jdbcType=VARCHAR}
+    where oid = #{oid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateFinalResult" parameterType="com.entity.Result">
+    update result set finalresult= #{finalresult,jdbcType=VARCHAR},doctor= #{doctor,jdbcType=VARCHAR}
+    ,fileid= #{fileId,jdbcType=VARCHAR},filename= #{fileName,jdbcType=VARCHAR}
+    ,filepath= #{filePath,jdbcType=VARCHAR},updatetime= #{updatetime,jdbcType=VARCHAR}
+    where oid = #{oid,jdbcType=VARCHAR}
+  </update>
+  <select id="queryResult" parameterType="com.entity.Result" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from result where oid = #{oid,jdbcType=VARCHAR}
+  </select>
+  <select id="queryDisease"  resultType="java.lang.String">
+<!--     select r.finalresult from result r where r.finalresult <> '正常' group by r.finalresult -->
+	select r.finalresult from result r group by r.finalresult
+  </select>
+  <select id="queryDiseaseCount" parameterType="java.lang.String" resultType="java.lang.String">
+<!--     select r.finalresult, r.usex,count(*) from result r where r.finalresult <> '正常' group by r.finalresult, r.usex -->
+	select count(*) from result r where r.finalresult = #{arg0} and r.usex = #{arg1}
+  </select>
+  
+   <select id="getResultByOid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from result where oid = #{oid,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <select id="queryAllResult" parameterType="com.entity.Result" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from result
+   <where>
+      <if test="oid!=null and oid!=''">
+        and oid like concat("%",#{oid},"%")
+      </if>
+    </where>
+  </select>
+  <select id="queryAllResultByStatus" parameterType="com.entity.Result" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from result o where o.status = '1'
+  </select>
+  <delete id="deleteResult" parameterType="java.lang.String">
+    delete from result
+    where oid = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addResult" parameterType="com.entity.Result">
+    insert into result ( oid, uname, usex, projectresult, 
+    finalresult, doctor)
+    values ( #{oid,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, #{usex,jdbcType=VARCHAR}, 
+      #{projectresult,jdbcType=VARCHAR}, #{finalresult,jdbcType=VARCHAR}, #{doctor,jdbcType=VARCHAR})
+  </insert>
+  
+  <select id="getResultDetail" parameterType="com.entity.Result" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from result where oid = #{oid,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

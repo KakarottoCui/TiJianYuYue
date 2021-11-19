@@ -1,0 +1,337 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.UserMapper">
+  <resultMap id="AdminBaseResultMap" type="com.entity.Admin">
+    <id property="aid" jdbcType="VARCHAR" column="AID" />
+    <result property="aname" jdbcType="VARCHAR" column="ANAME" />
+    <result property="apassword" jdbcType="VARCHAR" column="APASSWORD" />
+    <result property="aphone" jdbcType="VARCHAR" column="APHONE" />
+  </resultMap>
+  
+  <resultMap id="DoctorBaseResultMap" type="com.entity.Doctor">
+    <id property="did" jdbcType="VARCHAR" column="DID" />
+    <result property="dname" jdbcType="VARCHAR" column="DNAME" />
+    <result property="dpassword" jdbcType="VARCHAR" column="DPASSWORD" />
+    <result property="dsex" jdbcType="VARCHAR" column="DSEX" />
+    <result property="department" jdbcType="VARCHAR" column="DEPARTMENT" />
+    <result property="dphone" jdbcType="VARCHAR" column="DPHONE" />
+    <result property="remarks" jdbcType="VARCHAR" column="REMARKS" />
+  </resultMap>
+  
+  <resultMap id="UserBaseResultMap" type="com.entity.User">
+    <id property="uid" jdbcType="VARCHAR" column="UID" />
+    <result property="uname" jdbcType="VARCHAR" column="UNAME" />
+    <result property="upassword" jdbcType="VARCHAR" column="UPASSWORD" />
+    <result property="usex" jdbcType="VARCHAR" column="USEX" />
+    <result property="uidcard" jdbcType="VARCHAR" column="UIDCARD" />
+    <result property="uphone" jdbcType="VARCHAR" column="UPHONE" />
+    <result property="birthday" jdbcType="VARCHAR" column="BIRTHDAY" />
+    <result property="address" jdbcType="VARCHAR" column="ADDRESS" />
+  </resultMap>
+  
+  <resultMap id="DepartmentBaseResultMap" type="com.entity.Department">
+    <id property="id" jdbcType="VARCHAR" column="ID" />
+    <result property="name" jdbcType="VARCHAR" column="NAME" />
+  </resultMap>
+  
+  <sql id="User_Base_Column_List">
+    uid, uname, upassword, usex, usex, uidcard, uphone, birthday, address
+  </sql>
+  
+  <sql id="Doctor_Base_Column_List">
+    did, dname, dpassword, dsex, department, dphone, remarks
+  </sql>
+  
+  <sql id="Admin_Base_Column_List">
+    aid, aname, apassword, aphone
+  </sql>
+  
+  <sql id="Department_Base_Column_List">
+    id, name
+  </sql>
+  
+  <select id="adminLogin" parameterType="com.entity.Admin" resultMap="AdminBaseResultMap">
+   select * from admin t where t.aid = #{aid} and t.apassword = #{apassword}
+  </select>
+  
+  <select id="doctorLogin" parameterType="com.entity.Doctor" resultMap="DoctorBaseResultMap">
+   select * from doctor t where t.did = #{did} and t.dpassword = #{dpassword}
+  </select>
+  
+  <select id="userLogin" parameterType="com.entity.User" resultMap="UserBaseResultMap">
+   select * from user t where t.uid = #{uid} and t.upassword = #{upassword}
+  </select>
+  
+  <insert id="addUser" parameterType="com.entity.User">
+    insert into user (uid, uname, upassword, 
+      usex, uidcard, uphone, 
+      birthday, address)
+    values (#{uid,jdbcType=VARCHAR}, #{uname,jdbcType=VARCHAR}, #{upassword,jdbcType=VARCHAR}, 
+      #{usex,jdbcType=VARCHAR}, #{uidcard,jdbcType=VARCHAR}, #{uphone,jdbcType=VARCHAR}, 
+      #{birthday,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 用户查询 -->
+  <select id="queryAllUser"  resultMap="UserBaseResultMap">
+    select
+    <include refid="User_Base_Column_List" />
+    from user
+    <where>
+      <if test="uname!=null and uname!=''">
+        and uname like concat("%",#{uname},"%")
+      </if>
+      <if test="uid!=null and uid!=''">
+        and uid like concat("%",#{uid},"%")
+      </if>
+    </where>
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String">
+    delete from user
+    where uid = #{uid,jdbcType=VARCHAR}
+  </delete>
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.entity.User">
+    update user
+    <set>
+      <if test="uname != null">
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="upassword != null">
+        upassword = #{upassword,jdbcType=VARCHAR},
+      </if>
+      <if test="usex != null">
+        usex = #{usex,jdbcType=VARCHAR},
+      </if>
+      <if test="uidcard != null">
+        uidcard = #{uidcard,jdbcType=VARCHAR},
+      </if>
+      <if test="uphone != null">
+        uphone = #{uphone,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null">
+        birthday = birthday{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="address != null">
+        address = #{address,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where uid = #{uid,jdbcType=VARCHAR}
+  </update>
+  
+  <insert id="addDoctor" parameterType="com.entity.Doctor">
+    insert into doctor (did, dname, dpassword, 
+      dsex, department, dphone, 
+      remarks)
+    values (#{did,jdbcType=VARCHAR}, #{dname,jdbcType=VARCHAR}, #{dpassword,jdbcType=VARCHAR}, 
+      #{dsex,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR}, #{dphone,jdbcType=VARCHAR}, 
+      #{remarks,jdbcType=VARCHAR})
+  </insert>
+  
+  <!-- 用户查询 -->
+  <select id="queryAllDoctor"  resultMap="DoctorBaseResultMap">
+    select
+    <include refid="Doctor_Base_Column_List" />
+    from doctor
+    <where>
+      <if test="dname!=null and dname!=''">
+        and dname like concat("%",#{dname},"%")
+      </if>
+      <if test="did!=null and did!=''">
+        and did like concat("%",#{did},"%")
+      </if>
+    </where>
+  </select>
+  
+  <delete id="deleteDoctor" parameterType="java.lang.String">
+    delete from doctor
+    where did = #{did,jdbcType=VARCHAR}
+  </delete>
+  
+  <update id="updateDoctor" parameterType="com.entity.Doctor">
+    update doctor
+    <set>
+      <if test="dname != null">
+        dname = #{dname,jdbcType=VARCHAR},
+      </if>
+      <if test="dpassword != null">
+        dpassword = #{dpassword,jdbcType=VARCHAR},
+      </if>
+      <if test="dsex != null">
+        dsex = #{dsex,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+      <if test="dphone != null">
+        dphone = #{dphone,jdbcType=VARCHAR},
+      </if>
+      <if test="remarks != null">
+        remarks = #{remarks,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where did = #{did,jdbcType=VARCHAR}
+  </update>
+  
+  <update id="updateAdmin" parameterType="com.entity.Admin">
+    update admin
+    <set>
+      <if test="aname != null">
+        aname = #{aname,jdbcType=VARCHAR},
+      </if>
+      <if test="apassword != null">
+        apassword = #{apassword,jdbcType=VARCHAR},
+      </if>
+      
+      <if test="aphone != null">
+        aphone = #{aphone,jdbcType=VARCHAR},
+      </if>
+     
+    </set>
+    where aid = #{aid,jdbcType=VARCHAR}
+  </update>
+  
+  <!-- 用户查询 -->
+  <select id="queryAllDepartment"  parameterType="com.entity.Department" resultMap="DepartmentBaseResultMap">
+    select
+    <include refid="Department_Base_Column_List" />
+    from department
+    <where>
+      <if test="id!=null and id!=''">
+        and id = #{id,jdbcType=VARCHAR}
+      </if>  
+    </where>
+  </select>
+  
+   <select id="queryAdmin"  parameterType="java.lang.String" resultMap="AdminBaseResultMap">
+    select
+    <include refid="Admin_Base_Column_List" />
+    from admin t where t.aid = #{id,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="queryDoctor"  parameterType="java.lang.String" resultMap="DoctorBaseResultMap">
+    select
+    <include refid="Doctor_Base_Column_List" />
+    from doctor t where t.did = #{id,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="queryUser"  parameterType="java.lang.String" resultMap="UserBaseResultMap">
+    select
+    <include refid="User_Base_Column_List" />
+    from user t where t.uid = #{id,jdbcType=VARCHAR}
+  </select>
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  <insert id="insert" parameterType="com.entity.User">
+    insert into sys_user (userid, loginname, identity, 
+      realname, sex, address, 
+      phone, pwd, position, 
+      type, available)
+    values (#{userid,jdbcType=INTEGER}, #{loginname,jdbcType=VARCHAR}, #{identity,jdbcType=VARCHAR}, 
+      #{realname,jdbcType=VARCHAR}, #{sex,jdbcType=INTEGER}, #{address,jdbcType=VARCHAR}, 
+      #{phone,jdbcType=VARCHAR}, #{pwd,jdbcType=VARCHAR}, #{position,jdbcType=VARCHAR}, 
+      #{type,jdbcType=INTEGER}, #{available,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.entity.User">
+    insert into sys_user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        userid,
+      </if>
+      <if test="loginname != null">
+        loginname,
+      </if>
+      <if test="identity != null">
+        identity,
+      </if>
+      <if test="realname != null">
+        realname,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="pwd != null">
+        pwd,
+      </if>
+      <if test="position != null">
+        position,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="available != null">
+        available,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userid != null">
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="loginname != null">
+        #{loginname,jdbcType=VARCHAR},
+      </if>
+      <if test="identity != null">
+        #{identity,jdbcType=VARCHAR},
+      </if>
+      <if test="realname != null">
+        #{realname,jdbcType=VARCHAR},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="pwd != null">
+        #{pwd,jdbcType=VARCHAR},
+      </if>
+      <if test="position != null">
+        #{position,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="available != null">
+        #{available,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="updateByPrimaryKey" parameterType="com.entity.User">
+    update sys_user
+    set loginname = #{loginname,jdbcType=VARCHAR},
+      identity = #{identity,jdbcType=VARCHAR},
+      realname = #{realname,jdbcType=VARCHAR},
+      sex = #{sex,jdbcType=INTEGER},
+      address = #{address,jdbcType=VARCHAR},
+      phone = #{phone,jdbcType=VARCHAR},
+      pwd = #{pwd,jdbcType=VARCHAR},
+      position = #{position,jdbcType=VARCHAR},
+      type = #{type,jdbcType=INTEGER},
+      available = #{available,jdbcType=INTEGER}
+    where userid = #{userid,jdbcType=INTEGER}
+  </update>
+  
+  <!--保存用户和角色的关系-->
+  <insert id="insertUserRole">
+    insert into sys_role_user(uid,rid) VALUES (#{uid},#{rid})
+  </insert>
+</mapper>

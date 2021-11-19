@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.PackageMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Package">
+    <id column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="PACKAGENAME" jdbcType="VARCHAR" property="packagename" />
+    <result column="PID" jdbcType="VARCHAR" property="pid" />
+    <result column="PNAME" jdbcType="VARCHAR" property="pname" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, packagename, pid, pname
+  </sql>
+  <select id="queryAllPackage" parameterType="com.entity.Package" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from package
+   <where>
+      <if test="id!=null and id!=''">
+        and id like concat("%",#{id},"%")
+      </if>
+      <if test="packagename!=null and packagename!=''">
+        and packagename like concat("%",#{packagename},"%")
+      </if>
+    </where>
+  </select>
+  <select id="queryAllPackageById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from package p where 
+         p.id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deletePackage" parameterType="java.lang.String">
+    delete from package
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addPackage" parameterType="com.entity.Package">
+    insert into package (id, packagename, pid)
+    values (#{id,jdbcType=VARCHAR}, #{packagename,jdbcType=VARCHAR}, #{pid,jdbcType=VARCHAR})
+  </insert>
+  <update id="updatePackage" parameterType="com.entity.Package">
+    update package
+    <set>
+      <if test="packagename != null and packagename!=''">
+        packagename = #{packagename,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null and pid!=''">
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+
+</mapper>

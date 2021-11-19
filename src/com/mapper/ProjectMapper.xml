@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.ProjectMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Project">
+    <id column="PID" jdbcType="VARCHAR" property="pid" />
+    <result column="PNAME" jdbcType="VARCHAR" property="pname" />
+    <result column="PTYPE" jdbcType="VARCHAR" property="ptype" />
+    <result column="PSEX" jdbcType="VARCHAR" property="psex" />
+    <result column="DEPARTMENT" jdbcType="INTEGER" property="department" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    pid, pname, ptype, psex, department
+  </sql>
+  <select id="queryAllProject" parameterType="com.entity.Project" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project
+   <where>
+      <if test="pid!=null and pid!=''">
+        and pid like concat("%",#{pid},"%")
+      </if>
+      <if test="pname!=null and pname!=''">
+        and pname like concat("%",#{pname},"%")
+      </if>
+    </where>
+  </select>
+  <delete id="deleteProject" parameterType="java.lang.String">
+    delete from project
+    where pid = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addProject" parameterType="com.entity.Project">
+    insert into project (pid, pname, ptype,
+      psex, department)
+    values (#{pid,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, #{ptype,jdbcType=VARCHAR}, 
+      #{psex,jdbcType=VARCHAR}, #{department,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateProject" parameterType="com.entity.Project">
+    update project
+    <set>
+      <if test="pname != null and pname!=''">
+        pname = #{pname,jdbcType=VARCHAR},
+      </if>
+      <if test="ptype != null and ptype!=''">
+        ptype = #{ptype,jdbcType=VARCHAR},
+      </if>
+      <if test="psex != null and psex!=''">
+        psex = #{psex,jdbcType=VARCHAR},
+      </if>
+      <if test="department != null and department!=''">
+        department = #{department,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where pid = #{pid,jdbcType=VARCHAR}
+  </update>
+<select id="queryAllProjectByDepartment" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from project p where p.department = #{department,jdbcType=VARCHAR}
+  </select>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.Order1Mapper">
+  <resultMap id="BaseResultMap" type="com.entity.Order1">
+    <id column="OID" jdbcType="VARCHAR" property="oid" />
+    <result column="UNAME" jdbcType="VARCHAR" property="uname" />
+    <result column="USEX" jdbcType="VARCHAR" property="usex" />
+    <result column="UPHONE" jdbcType="VARCHAR" property="uphone" />
+    <result column="BIRTHDAY" jdbcType="VARCHAR" property="birthday" />
+    <result column="ODATETIME" jdbcType="VARCHAR" property="odatetime" />
+    <result column="PID" jdbcType="VARCHAR" property="pid" />
+    <result column="PNAME" jdbcType="VARCHAR" property="pname" />
+    <result column="ID" jdbcType="VARCHAR" property="id" />
+    <result column="PACKAGENAME" jdbcType="VARCHAR" property="packagename" />
+    <result column="TYPE" jdbcType="VARCHAR" property="type" />
+    <result column="ADDUSER" jdbcType="VARCHAR" property="adduser" />
+    <result column="ADDTIME" jdbcType="VARCHAR" property="addtime" />
+    <result column="STATUS" jdbcType="VARCHAR" property="status" />
+    <result column="ALLPROJECT" jdbcType="VARCHAR" property="allproject" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    oid, uname, usex, uphone, birthday, odatetime, pid, pname, id, packagename,status,allproject, type, adduser, addtime
+  </sql>
+  <select id="queryAllOrder1" parameterType="com.entity.Order1" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order1
+   <where>
+      <if test="oid!=null and oid!=''">
+        and oid like concat("%",#{oid},"%")
+      </if>
+      <if test="uname!=null and uname!=''">
+        and uname like concat("%",#{uname},"%")
+      </if>
+    </where>
+  </select>
+  <select id="queryAllOrder1ByStatus" parameterType="com.entity.Order1" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order1 o 
+  </select>
+  <select id="getAllApproveOrder" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order1 o where o.status = #{status,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteOrder1" parameterType="java.lang.String">
+    delete from order1
+    where oid = #{id,jdbcType=VARCHAR}
+  </delete>
+  <update id="allowOrder1" parameterType="java.lang.String">
+    update order1 set status = "1"
+    where oid = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="forbidOrder1" parameterType="java.lang.String">
+    update order1 set status = "-1"
+    where oid = #{id,jdbcType=VARCHAR}
+  </update>
+  <insert id="addOrder1" parameterType="com.entity.Order1">
+    insert into order1 ( uname, usex, uphone, birthday, 
+    odatetime, pid, pname, id, packagename, status, allproject, type, adduser, addtime)
+    values ( #{uname,jdbcType=VARCHAR}, #{usex,jdbcType=VARCHAR}, 
+      #{uphone,jdbcType=VARCHAR}, #{birthday,jdbcType=VARCHAR}, #{odatetime,jdbcType=VARCHAR},
+      #{pid,jdbcType=VARCHAR}, #{pname,jdbcType=VARCHAR}, #{id,jdbcType=VARCHAR}, #{packagename,jdbcType=VARCHAR}, 
+      "0",#{allproject,jdbcType=VARCHAR},#{type,jdbcType=VARCHAR},#{adduser,jdbcType=VARCHAR},
+      #{addtime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateOrder1" parameterType="com.entity.Order1">
+    update order1
+    <set>
+      <if test="uname != null and uname!=''">
+        uname = #{uname,jdbcType=VARCHAR},
+      </if>
+      <if test="birthday != null and birthday !=''">
+        birthday = #{birthday,jdbcType=VARCHAR},
+      </if>
+      <if test="odatetime != null and odatetime !=''">
+        odatetime = #{odatetime,jdbcType=VARCHAR},
+      </if>
+      <if test="pid != null and pid !=''">
+        pid = #{pid,jdbcType=VARCHAR},
+      </if>
+      <if test="id != null and id !=''">
+        id = #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="allproject != null and allproject !=''">
+        allproject = #{allproject,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where oid = #{oid,jdbcType=VARCHAR}
+  </update>
+  <update id="updateOrder1Status" parameterType="com.entity.Order1">
+    update order1
+    set status= #{status,jdbcType=VARCHAR}
+    where oid = #{oid,jdbcType=VARCHAR}
+  </update>
+  <select id="getOrder1Detail" parameterType="com.entity.Order1" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order1 where oid = #{oid,jdbcType=VARCHAR}
+  </select>
+  
+  <select id="getOrderByUserId" parameterType="String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from order1 where uname = #{userid,jdbcType=VARCHAR}
+  </select>
+
+</mapper>

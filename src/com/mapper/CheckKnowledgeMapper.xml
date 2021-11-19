@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CheckKnowledgeMapper">
+  <resultMap id="BaseResultMap" type="com.entity.CheckKnowledge">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="TITLE" jdbcType="VARCHAR" property="title" />
+    <result column="CONTEXT" jdbcType="VARCHAR" property="context" />
+    <result column="AUTHORID" jdbcType="VARCHAR" property="authorid" />
+    <result column="AUTHORNAME" jdbcType="VARCHAR" property="authorname" />
+    <result column="ADDTIME" jdbcType="VARCHAR" property="addtime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, context, authorid, authorname, addtime
+  </sql>
+  <select id="queryAllCheckKnowledge" parameterType="com.entity.CheckKnowledge" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from checkknowledge
+   <where>
+      <if test="id!=null and id!=''">
+        and id like concat("%",#{id},"%")
+      </if>
+      <if test="title!=null and title!=''">
+        and title like concat("%",#{title},"%")
+      </if>
+    </where>
+  </select>
+  <select id="queryAllCheckKnowledgeById" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from checkknowledge p where 
+         p.id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteCheckKnowledge" parameterType="java.lang.String">
+    delete from checkknowledge
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="addCheckKnowledge" parameterType="com.entity.CheckKnowledge">
+    insert into checkknowledge (id, title, context, authorid, authorname, addtime)
+    values (#{id,jdbcType=VARCHAR}, #{title,jdbcType=VARCHAR}, #{context,jdbcType=VARCHAR}, #{authorid,jdbcType=VARCHAR}, #{authorname,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR})
+  </insert>
+  <update id="updateCheckKnowledge" parameterType="com.entity.CheckKnowledge">
+    update checkknowledge
+    <set>
+      <if test="title != null and title !=''">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="context != null and context !=''">
+        context = #{context,jdbcType=VARCHAR},
+      </if>
+      <if test="authorid != null and authorid !=''">
+        authorid = #{authorid,jdbcType=VARCHAR},
+      </if>
+      <if test="authorname != null and authorname !=''">
+        authorname = #{authorname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getCheckKnowledgeById" parameterType="INTEGER" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from checkknowledge t where t.id = #{id,jdbcType=INTEGER}
+  </select>
+
+</mapper>

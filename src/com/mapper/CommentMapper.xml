@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mapper.CommentMapper">
+  <resultMap id="BaseResultMap" type="com.entity.Comment">
+    <id column="ID" jdbcType="INTEGER" property="id" />
+    <result column="NICKNAME" jdbcType="VARCHAR" property="nickName" />
+    <result column="USERID" jdbcType="VARCHAR" property="userId" />
+    <result column="CONTENT" jdbcType="VARCHAR" property="content" />
+    <result column="PARENTID" jdbcType="VARCHAR" property="parentId" />
+    <result column="ADDTIME" jdbcType="VARCHAR" property="addtime" />
+    <result column="ROLE" jdbcType="VARCHAR" property="role" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    ID, NICKNAME, USERID, CONTENT, PARENTID, ADDTIME, ROLE
+  </sql>
+  <select id="queryAllComment" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment t 
+  </select>
+  
+  <select id="queryAllParentComment" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment t where t.parentid = -1 order by t.addtime desc
+  </select>
+  
+  <select id="queryAllParentCommentByUserId" parameterType="java.lang.String" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment t where t.parentid = -1 and t.userid = #{userId, jdbcType=VARCHAR} order by t.addtime desc
+  </select>
+  
+  <select id="queryAllChildComment"  resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from comment t where t.parentid > -1 order by t.addtime desc
+  </select>
+ 
+  <insert id="addComment" parameterType="com.entity.Comment">
+    insert into comment ( userid, nickname, content, parentid, 
+    addtime, role)
+    values ( #{userId,jdbcType=VARCHAR}, #{nickName,jdbcType=VARCHAR}, 
+      #{content,jdbcType=VARCHAR}, #{parentId,jdbcType=VARCHAR}, #{addtime,jdbcType=VARCHAR},
+      #{role,jdbcType=VARCHAR})
+  </insert>
+ 
+
+</mapper>
