@@ -1,9 +1,9 @@
 # TiJianYuYue
 基于SSM框架的医院体检预约管理系统
 
-本代码并非完整版，如需完整版请加QQ：821898835，承接商业项目和毕设代做！
+演示视频：https://live.csdn.net/v/181394
 
-演示视频：https://live.csdn.net/v/177224
+详询QQ：821898835，微信：egvh56ufy7hh，承接商业项目和毕设
 
 功能需求：
 
